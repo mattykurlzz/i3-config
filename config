@@ -26,6 +26,9 @@ font pango:monospace 8
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
 
+# Disable screen locking on timeout
+exec --no-startup-id xset s off -dpms
+
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -36,6 +39,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
+
+# Select a window or region and copy to clipboard
+bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -61,6 +67,10 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+d exec --no-startup-id rofi drun
 # A more modern dmenu replacement is rofi:
 bindcode $mod+40 exec "rofi -modi drun,run -show drun"
+
+# start bluetooth control
+bindsym $mod+Shift+b exec --no-startup-id rofi-bluetooth
+
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
@@ -157,6 +167,21 @@ bindsym $mod+Shift+7 move container to workspace number $ws7
 bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# Define the move mode
+mode "move_workspace" {
+    bindsym l move workspace to output right
+    bindsym h move workspace to output left
+    bindsym k move workspace to output up
+    bindsym j move workspace to output down
+
+    # Back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# Keybinding to enter the mode
+bindsym $mod+m mode "move_workspace"
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
